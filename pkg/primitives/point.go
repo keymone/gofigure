@@ -16,12 +16,15 @@ type Point struct {
 	vao  uint32
 }
 
-func MakePoint3(x, y, z float32) *Point {
-	return &Point{position: mgl32.Vec4{x, y, z, 1}}
-}
+func XY(x, y float32) mgl32.Vec4         { return mgl32.Vec4{x, y, 0, 1} }
+func XYZ(x, y, z float32) mgl32.Vec4     { return mgl32.Vec4{x, y, z, 1} }
+func XYZW(x, y, z, w float32) mgl32.Vec4 { return mgl32.Vec4{x, y, z, w} }
 
-func MakePoint2(x, y float32) *Point {
-	return &Point{position: mgl32.Vec4{x, y, 0, 1}}
+func RGB(r, g, b float32) mgl32.Vec4     { return mgl32.Vec4{r, g, b, 1} }
+func RGBA(r, g, b, a float32) mgl32.Vec4 { return mgl32.Vec4{r, g, b, a} }
+
+func MakePoint(pos, col mgl32.Vec4) *Point {
+	return &Point{position: pos, color: col}
 }
 
 func (p *Point) Setup() {

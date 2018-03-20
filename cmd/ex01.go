@@ -17,12 +17,12 @@ func main() {
 	pkg.UseDefaultProgram()
 
 	tri := prim.MakeTriangle(
-		prim.MakePoint2(0, 0),
-		prim.MakePoint2(0, 0.9),
-		prim.MakePoint2(0.9, 0.9),
+		prim.MakePoint(prim.XY(0, 0), prim.RGB(1, 0, 0)),
+		prim.MakePoint(prim.XY(0, 0.5), prim.RGB(0, 1, 0)),
+		prim.MakePoint(prim.XY(0.5, 0.5), prim.RGB(0, 0, 1)),
 	)
 
-	p1 := prim.MakePoint2(-0.1, -0.1)
+	p1 := prim.MakePoint(prim.XY(-0.5, -0.5), prim.RGB(1, 1, 1))
 
 	s := pkg.MakeBaseScene()
 	s.AddEntity(tri)
