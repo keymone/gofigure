@@ -9,14 +9,14 @@ import (
 
 const (
 	// uniform mat4 mvp;
-	// in vec4 vc;
 	vertexShaderSource = `
     #version 410
-    in vec4 vp;
+    layout(location=0) in vec4 vp;
+    layout(location=1) in vec4 vc;
     out vec4 color;
     void main() {
       gl_Position = vp;
-      color = vec4(1,0,0,0);
+      color = vc;
     }
   ` + "\x00"
 

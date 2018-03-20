@@ -34,6 +34,10 @@ func (p *Point) Setup() {
 			p.position.Y(),
 			p.position.Z(),
 			p.position.W(),
+			p.color.X(),
+			p.color.Y(),
+			p.color.Z(),
+			p.color.W(),
 		}
 	}
 
@@ -42,7 +46,7 @@ func (p *Point) Setup() {
 	}
 
 	if p.vao == 0 {
-		p.vao = pkg.MakeVao(p.vbo, 1, 0, 0)
+		p.vao = pkg.MakeVao(p.vbo, 1)
 	}
 }
 
@@ -50,7 +54,7 @@ func (p *Point) Draw() {
 	p.Setup()
 
 	gl.BindVertexArray(p.vao)
-	gl.DrawArrays(gl.POINTS, 0, int32(1))
+	gl.DrawArrays(gl.POINTS, 0, 1)
 }
 
 func DrawPoints(ps []*Point) {

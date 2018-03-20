@@ -38,14 +38,26 @@ func (p *Triangle) Setup() {
 			p.a.position.Y(),
 			p.a.position.Z(),
 			p.a.position.W(),
+			p.a.color.X(),
+			p.a.color.Y(),
+			p.a.color.Z(),
+			p.a.color.W(),
 			p.b.position.X(),
 			p.b.position.Y(),
 			p.b.position.Z(),
 			p.b.position.W(),
+			p.b.color.X(),
+			p.b.color.Y(),
+			p.b.color.Z(),
+			p.b.color.W(),
 			p.c.position.X(),
 			p.c.position.Y(),
 			p.c.position.Z(),
 			p.c.position.W(),
+			p.c.color.X(),
+			p.c.color.Y(),
+			p.c.color.Z(),
+			p.c.color.W(),
 		}
 	}
 
@@ -54,7 +66,7 @@ func (p *Triangle) Setup() {
 	}
 
 	if p.vao == 0 {
-		p.vao = pkg.MakeVao(p.vbo, 3, 0, 0)
+		p.vao = pkg.MakeVao(p.vbo, 3)
 	}
 }
 

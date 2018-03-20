@@ -16,17 +16,20 @@ func main() {
 
 	pkg.UseDefaultProgram()
 
-	tri := prim.MakeTriangle(
-		prim.MakePoint(prim.XY(0, 0), prim.RGB(1, 0, 0)),
-		prim.MakePoint(prim.XY(0, 0.5), prim.RGB(0, 1, 0)),
-		prim.MakePoint(prim.XY(0.5, 0.5), prim.RGB(0, 0, 1)),
-	)
-
-	p1 := prim.MakePoint(prim.XY(-0.5, -0.5), prim.RGB(1, 1, 1))
-
 	s := pkg.MakeBaseScene()
-	s.AddEntity(tri)
-	s.AddEntity(p1)
+	s.AddEntity(
+		prim.MakeTriangle(
+			prim.MakePoint(prim.XY(0, 0), prim.RGB(1, 0, 0)),
+			prim.MakePoint(prim.XY(0, 0.5), prim.RGB(0, 1, 0)),
+			prim.MakePoint(prim.XY(0.5, 0.5), prim.RGB(0, 0, 1)),
+		),
+		prim.MakeTriangle(
+			prim.MakePoint(prim.XY(0, 0), prim.RGB(1, 0, 0)),
+			prim.MakePoint(prim.XY(0, -0.5), prim.RGB(0, 1, 0)),
+			prim.MakePoint(prim.XY(-0.5, -0.5), prim.RGB(0, 0, 1)),
+		),
+		prim.MakePoint(prim.XY(0, 0), prim.RGB(1, 1, 1)),
+	)
 
 	// projection := mgl32.Perspective(mgl32.DegToRad(45.0), float32(width)/height, 0.1, 10.0)
 	// camera := mgl32.LookAtV(mgl32.Vec3{3, 3, 3}, mgl32.Vec3{0, 0, 0}, mgl32.Vec3{0, 1, 0})

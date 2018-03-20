@@ -1,8 +1,6 @@
 package pkg
 
 import (
-	"unsafe"
-
 	"github.com/go-gl/gl/v4.1-core/gl"
 )
 
@@ -15,21 +13,17 @@ func MakeVbo(vc []float32) uint32 {
 	return vbo
 }
 
-func MakeVao(vbo uint32, n, stride int, offset int) uint32 {
+func MakeVao(vbo uint32, n int) uint32 {
 	var vao uint32
 	gl.GenVertexArrays(1, &vao)
 	gl.BindVertexArray(vao)
-	gl.EnableVertexAttribArray(0)
 	gl.BindBuffer(gl.ARRAY_BUFFER, vbo)
 
-	var offsetPtr unsafe.Pointer
-	if offset == 0 {
-		offsetPtr = nil
-	} else {
-		offsetPtr = gl.PtrOffset(offset * 4)
-	}
+	gl.EnableVertexAttribArray(0)
+	gl.VertexAttribPointer(0, int32(n), gl.FLOAT, false, 8*4, nil)
 
-	gl.VertexAttribPointer(0, int32(n), gl.FLOAT, false, int32(stride*4), offsetPtr)
+	gl.EnableVertexAttribArray(1)
+	gl.VertexAttribPointer(1, int32(n), gl.FLOAT, false, 8*4, gl.PtrOffset(4*4))
 
 	return vao
 }

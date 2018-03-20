@@ -25,8 +25,8 @@ func (s *BaseScene) Render() {
 	}
 }
 
-func (s *BaseScene) AddEntity(toAdd Drawer) {
-	s.entities = append(s.entities, toAdd)
+func (s *BaseScene) AddEntity(toAdd ...Drawer) {
+	s.entities = append(s.entities, toAdd...)
 }
 
 func (s *BaseScene) RemoveEntity(toRemove Drawer) bool {

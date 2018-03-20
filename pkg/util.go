@@ -29,6 +29,7 @@ func MainLoop(
 		update(newTime - oldTime)
 		oldTime = newTime
 
+		gl.ClearColor(0.1, 0.1, 0.1, 1.0)
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 
 		render()
