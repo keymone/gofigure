@@ -1,38 +1,45 @@
 package pkg
 
 import (
-	"fmt"
+	"log"
 	"strings"
 
 	"github.com/go-gl/gl/v4.1-core/gl"
 )
 
 const (
-	// uniform mat4 mvp;
 	vertexShaderSource = `
     #version 410
+
+    uniform mat4 mvp;
+
     layout(location=0) in vec4 vp;
     layout(location=1) in vec4 vc;
+
     out vec4 color;
+
     void main() {
-      gl_Position = vp;
+      gl_Position = mvp * vp;
       color = vc;
     }
   ` + "\x00"
 
 	fragmentShaderSource = `
     #version 410
+
     in vec4 color;
     out vec4 fragColor;
+
     void main() {
       fragColor = color;
     }
   ` + "\x00"
 )
 
-func UseDefaultProgram() {
+func UseDefaultProgram() uint32 {
 	program := MakeProgram(vertexShaderSource, fragmentShaderSource)
 	gl.UseProgram(program)
+	return program
 }
 
 func MakeProgram(vsrc, fsrc string) uint32 {
@@ -46,11 +53,27 @@ func MakeProgram(vsrc, fsrc string) uint32 {
 		panic(err)
 	}
 
-	prog := gl.CreateProgram()
-	gl.AttachShader(prog, vertexShader)
-	gl.AttachShader(prog, fragmentShader)
-	gl.LinkProgram(prog)
-	return prog
+	program := gl.CreateProgram()
+	gl.AttachShader(program, vertexShader)
+	gl.AttachShader(program, fragmentShader)
+	gl.LinkProgram(program)
+
+	var status int32
+	gl.GetProgramiv(program, gl.LINK_STATUS, &status)
+	if status == gl.FALSE {
+		var logLength int32
+		gl.GetProgramiv(program, gl.INFO_LOG_LENGTH, &logLength)
+
+		logStr := strings.Repeat("\x00", int(logLength+1))
+		gl.GetProgramInfoLog(program, logLength, nil, gl.Str(logStr))
+
+		log.Panicf("failed to link program: %v", logStr)
+	}
+
+	gl.DeleteShader(vertexShader)
+	gl.DeleteShader(fragmentShader)
+
+	return program
 }
 
 func CompileShader(source string, shaderType uint32) (uint32, error) {
@@ -67,10 +90,10 @@ func CompileShader(source string, shaderType uint32) (uint32, error) {
 		var logLength int32
 		gl.GetShaderiv(shader, gl.INFO_LOG_LENGTH, &logLength)
 
-		log := strings.Repeat("\x00", int(logLength+1))
-		gl.GetShaderInfoLog(shader, logLength, nil, gl.Str(log))
+		logStr := strings.Repeat("\x00", int(logLength+1))
+		gl.GetShaderInfoLog(shader, logLength, nil, gl.Str(logStr))
 
-		return 0, fmt.Errorf("failed to compile %v: %v", source, log)
+		log.Panicf("failed to compile %v: %v", source, logStr)
 	}
 
 	return shader, nil
