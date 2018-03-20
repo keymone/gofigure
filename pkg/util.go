@@ -18,6 +18,28 @@ func Init(width, height int) *glfw.Window {
 	return window
 }
 
+func MainLoop(
+	window *glfw.Window,
+	program uint32,
+	update func(float64),
+	render func(),
+) {
+	var newTime, oldTime float64
+	for !window.ShouldClose() {
+		newTime = glfw.GetTime()
+		update(newTime - oldTime)
+		oldTime = newTime
+
+		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
+		gl.UseProgram(program)
+
+		render()
+
+		glfw.PollEvents()
+		window.SwapBuffers()
+	}
+}
+
 func Terminate() {
 	glfw.Terminate()
 }

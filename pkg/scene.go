@@ -1,7 +1,7 @@
 package pkg
 
 type IScene interface {
-	Update(float32)
+	Update(float64)
 	Render()
 
 	AddEntity(Drawer)
@@ -16,7 +16,7 @@ func MakeBaseScene() *BaseScene {
 	return &BaseScene{}
 }
 
-func (s *BaseScene) Update(time_delta float32) {
+func (s *BaseScene) Update(time_delta float64) {
 }
 
 func (s *BaseScene) Render() {

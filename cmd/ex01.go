@@ -1,8 +1,6 @@
 package main
 
 import (
-	"github.com/go-gl/gl/v4.1-core/gl"
-	"github.com/go-gl/glfw/v3.2/glfw"
 	_ "github.com/go-gl/mathgl/mgl32"
 
 	"gofigure/pkg"
@@ -32,13 +30,5 @@ func main() {
 	s.AddEntity(tri)
 	s.AddEntity(p1)
 
-	for !window.ShouldClose() {
-		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		gl.UseProgram(program)
-
-		s.Render()
-
-		glfw.PollEvents()
-		window.SwapBuffers()
-	}
+	pkg.MainLoop(window, program, s.Update, s.Render)
 }
