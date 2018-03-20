@@ -28,12 +28,15 @@ func main() {
 
 	p1 := prim.MakePoint2(-0.1, -0.1)
 
+	s := pkg.MakeBaseScene()
+	s.AddEntity(tri)
+	s.AddEntity(p1)
+
 	for !window.ShouldClose() {
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.UseProgram(program)
 
-		tri.Draw()
-		p1.Draw()
+		s.Render()
 
 		glfw.PollEvents()
 		window.SwapBuffers()

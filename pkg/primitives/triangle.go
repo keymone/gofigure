@@ -7,17 +7,17 @@ import (
 )
 
 type Triangle struct {
-	a Point
-	b Point
-	c Point
+	a *Point
+	b *Point
+	c *Point
 
 	flat []float32
 	vbo  uint32
 	vao  uint32
 }
 
-func MakeTriangle(a, b, c Point) Triangle {
-	return Triangle{
+func MakeTriangle(a, b, c *Point) *Triangle {
+	return &Triangle{
 		a: a,
 		b: b,
 		c: c,
