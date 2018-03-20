@@ -20,10 +20,10 @@ func MakeVao(vbo uint32, n int) uint32 {
 	gl.BindBuffer(gl.ARRAY_BUFFER, vbo)
 
 	gl.EnableVertexAttribArray(0)
-	gl.VertexAttribPointer(0, int32(n), gl.FLOAT, false, 8*4, nil)
+	gl.VertexAttribPointer(0, 4, gl.FLOAT, false, 8*4, gl.PtrOffset(0))
 
 	gl.EnableVertexAttribArray(1)
-	gl.VertexAttribPointer(1, int32(n), gl.FLOAT, false, 8*4, gl.PtrOffset(4*4))
+	gl.VertexAttribPointer(1, 4, gl.FLOAT, false, 8*4, gl.PtrOffset(4*4))
 
 	return vao
 }

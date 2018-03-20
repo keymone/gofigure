@@ -29,6 +29,9 @@ func main() {
 			prim.MakePoint(prim.XY(-0.5, -0.5), prim.RGB(0, 0, 1)),
 		),
 		prim.MakePoint(prim.XY(0, 0), prim.RGB(1, 1, 1)),
+		prim.MakePoint(prim.XY(.9, 0), prim.RGB(1, 1, 1)),
+		prim.MakePoint(prim.XY(0, .9), prim.RGB(1, 1, 1)),
+		prim.MakePoint(prim.XY(.9, .9), prim.RGB(1, 1, 1)),
 	)
 
 	// projection := mgl32.Perspective(mgl32.DegToRad(45.0), float32(width)/height, 0.1, 10.0)
