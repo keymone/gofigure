@@ -21,17 +21,19 @@ func main() {
 	program := pkg.MakeDefaultProgram()
 
 	tri := prim.MakeTriangle(
-		prim.MakePoint(0, 0, 0),
-		prim.MakePoint(0, 0.9, 0),
-		prim.MakePoint(0.9, 0.9, 0),
+		prim.MakePoint2(0, 0),
+		prim.MakePoint2(0, 0.9),
+		prim.MakePoint2(0.9, 0.9),
 	)
-	tri.Setup()
+
+	p1 := prim.MakePoint2(-0.1, -0.1)
 
 	for !window.ShouldClose() {
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
 		gl.UseProgram(program)
 
 		tri.Draw()
+		p1.Draw()
 
 		glfw.PollEvents()
 		window.SwapBuffers()

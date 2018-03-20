@@ -2,7 +2,6 @@ package primitives
 
 import (
 	"gofigure/pkg"
-	"log"
 
 	"github.com/go-gl/gl/v4.1-core/gl"
 )
@@ -34,7 +33,6 @@ func (p *Triangle) Draw() {
 
 func (p *Triangle) Setup() {
 	if p.flat == nil {
-		log.Print("Setting up flat")
 		p.flat = []float32{
 			p.a.position.X(),
 			p.a.position.Y(),
@@ -49,12 +47,10 @@ func (p *Triangle) Setup() {
 	}
 
 	if p.vbo == 0 {
-		log.Print("Initializing VBO")
 		p.vbo = pkg.MakeVbo(p.flat)
 	}
 
 	if p.vao == 0 {
-		log.Print("Initializing VAO")
 		p.vao = pkg.MakeVao(p.vbo, 3, 0, 0)
 	}
 }
