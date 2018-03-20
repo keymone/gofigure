@@ -30,6 +30,7 @@ func (p *Point) Setup() {
 			p.position.X(),
 			p.position.Y(),
 			p.position.Z(),
+			p.position.W(),
 		}
 	}
 

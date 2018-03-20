@@ -37,12 +37,15 @@ func (p *Triangle) Setup() {
 			p.a.position.X(),
 			p.a.position.Y(),
 			p.a.position.Z(),
+			p.a.position.W(),
 			p.b.position.X(),
 			p.b.position.Y(),
 			p.b.position.Z(),
+			p.b.position.W(),
 			p.c.position.X(),
 			p.c.position.Y(),
 			p.c.position.Z(),
+			p.c.position.W(),
 		}
 	}
 

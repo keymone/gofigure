@@ -20,7 +20,6 @@ func Init(width, height int) *glfw.Window {
 
 func MainLoop(
 	window *glfw.Window,
-	program uint32,
 	update func(float64),
 	render func(),
 ) {
@@ -31,7 +30,6 @@ func MainLoop(
 		oldTime = newTime
 
 		gl.Clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT)
-		gl.UseProgram(program)
 
 		render()
 
