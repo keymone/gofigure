@@ -16,7 +16,7 @@ func MakeBaseScene() *BaseScene {
 	return &BaseScene{}
 }
 
-func (s *BaseScene) Update(time_delta float64) {
+func (s *BaseScene) Update(timeDelta float64) {
 }
 
 func (s *BaseScene) Render() {
