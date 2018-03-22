@@ -11,27 +11,41 @@ const (
 	vertexShaderSource = `
     #version 410
 
-    uniform mat4 mvp;
+    uniform mat4 modelViewProjection;
 
-    layout(location=0) in vec4 vp;
-    layout(location=1) in vec4 vc;
+    layout(location=0) in vec4 vertexPosition;
+    layout(location=1) in vec4 vertexColor;
+	layout(location=2) in vec2 vertexUV;
 
     out vec4 color;
+	out vec2 uv;
 
     void main() {
-      gl_Position = mvp * vp;
-      color = vc;
+      gl_Position = modelViewProjection * vertexPosition;
+      color = vertexColor;
+	  uv = vertexUV;
     }
   ` + "\x00"
 
 	fragmentShaderSource = `
     #version 410
 
+	uniform sampler2D textureSampler;
+	uniform int fragmentMode;
+
     in vec4 color;
+	in vec2 uv;
+
     out vec4 fragColor;
 
     void main() {
-      fragColor = color;
+	  if (fragmentMode == 0) {
+        fragColor = texture(textureSampler, uv);
+	  } else if (fragmentMode == 1) {
+        fragColor = color;
+      } else if (fragmentMode == 2) {
+        fragColor = texture(textureSampler, uv) * color;
+	  }
     }
   ` + "\x00"
 )
