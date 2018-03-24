@@ -23,7 +23,7 @@ type TexSprite = image.Rectangle
 
 type TexPack struct {
 	sprites map[string]TexSprite
-	data *image.RGBA
+	data *image.NRGBA
 	index []string
 }
 
@@ -38,7 +38,7 @@ func (tp *TexPack) Sprites() map[string]TexSprite {
 	return tp.sprites
 }
 
-func (tp *TexPack) Data() *image.RGBA {
+func (tp *TexPack) Data() *image.NRGBA {
 	return tp.data
 }
 
@@ -166,7 +166,7 @@ func LoadTexPack(file string) (*TexPack, error) {
 		return nil, fmt.Errorf("decoding data: %s", err)
 	}
 
-	rgba := image.NewRGBA(img.Bounds())
+	rgba := image.NewNRGBA(img.Bounds())
 	if rgba.Stride != rgba.Rect.Size().X*4 {
 		return nil, fmt.Errorf("unsupported stride data: %s", err)
 	}
@@ -289,7 +289,7 @@ func MakeTexPack(dir string) (*TexPack, error) {
 	if w <= 0 {
 		return nil, fmt.Errorf("texture packing broke: [%d %d]", w, h)
 	}
-	tp.data = image.NewRGBA(image.Rect(0, 0, w, h))
+	tp.data = image.NewNRGBA(image.Rect(0, 0, w, h))
 
 	for k := range tp.sprites {
 		draw.Draw(
