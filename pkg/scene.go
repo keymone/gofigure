@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"image"
 	"image/draw"
+	"image/png"
 	"os"
 
 	p "gofigure/pkg/primitives"
@@ -87,7 +88,7 @@ func (s *BaseScene) SetTexture(file string) (uint32, error) {
 	if err != nil {
 		return 0, fmt.Errorf("texture %q not found on disk: %v", file, err)
 	}
-	img, _, err := image.Decode(imgFile)
+	img, err := png.Decode(imgFile)
 	if err != nil {
 		return 0, err
 	}

@@ -1,6 +1,8 @@
 package main
 
 import (
+	"log"
+
 	"gofigure/pkg"
 	p "gofigure/pkg/primitives"
 
@@ -42,7 +44,10 @@ func main() {
 
 	ratio := float32(width) / height
 	s.SetMvp(mgl32.Ortho(-ratio, ratio, -1, 1, 1, -1))
-	s.SetTexture("resources/empty.rgb")
+	_, err := s.SetTexture("resources/empty.png")
+	if err != nil {
+		log.Panic(err)
+	}
 
 	pkg.MainLoop(window, s.Update, s.Render)
 }
