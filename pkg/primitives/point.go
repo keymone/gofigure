@@ -19,13 +19,35 @@ type Point struct {
 
 func XY(x, y float32) mgl32.Vec4         { return mgl32.Vec4{x, y, 0, 1} }
 func XYZ(x, y, z float32) mgl32.Vec4     { return mgl32.Vec4{x, y, z, 1} }
-func XYZW(x, y, z, w float32) mgl32.Vec4 { return mgl32.Vec4{x, y, z, w} }
-
-var RGBZ = mgl32.Vec4{0,0,0,0}
 func RGB(r, g, b float32) mgl32.Vec4     { return mgl32.Vec4{r, g, b, 1} }
 func RGBA(r, g, b, a float32) mgl32.Vec4 { return mgl32.Vec4{r, g, b, a} }
-
 func UV(u, v float32) mgl32.Vec2 { return mgl32.Vec2{u, v} }
+
+var (
+	RGBZ = mgl32.Vec4{0,0,0,0}
+	RGBW = mgl32.Vec4{1,1,1,1}
+	RGBR = mgl32.Vec4{1,0,0,1}
+	RGBG = mgl32.Vec4{0,1,0,1}
+	RGBB = mgl32.Vec4{0,0,1,1}
+	UVZ = mgl32.Vec2{0,0}
+)
+
+type Rectf struct {
+	Min, Max [2]float32
+}
+
+func MakeRectf(x1, y1, x2, y2 float32) Rectf {
+	if x1 > x2 {
+		x1, x2 = x2, x1
+	}
+	if y1 > y2 {
+		y1, y2 = y2, y1
+	}
+	return Rectf{
+		Min: [2]float32{x1, y1},
+		Max: [2]float32{x2, y2},
+	}
+}
 
 func MakePoint(pos, col mgl32.Vec4, uv mgl32.Vec2) *Point {
 	p := &Point{position: pos, color: col, uv: uv}

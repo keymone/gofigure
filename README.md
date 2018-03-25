@@ -1,3 +1,8 @@
+Gofigure
+========
+
+Golang + GLFW + OpenGL experiments. See example code in `cmd/ex*.go`.
+
 Installation
 ------------
 

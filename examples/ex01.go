@@ -30,17 +30,22 @@ func main() {
 		log.Panic(err)
 	}
 
+	shipBounds := tp.SpriteBounds01("ship/hull")
+	shipTL := shipBounds.Min
+	shipTL[1] = shipBounds.Max[1]
+	shipBR := shipBounds.Max
+	shipBR[1] = shipBounds.Min[1]
+
+	emptyBounds := tp.SpriteBounds01("empty")
+
 	s.AddEntity(
-		p.MakeQuad(
-			p.MakePointXYUV(-0.5, 0.5, 0, 1),
-			p.MakePointXYUV(-0.1, 0.5, 1, 1),
-			p.MakePointXYUV(-0.1, -0.5, 1, 0),
-			p.MakePointXYUV(-0.5, -0.5, 0, 0),
+		p.MakeQuadRCR(
+			p.MakeRectf(-.5,-.5, -.1, .5), p.RGBW, shipBounds,
 		),
 		p.MakeTriangle(
-			p.MakePoint(p.XY(0, 0), p.RGB(1,0,0), p.UV(0,0)),
-			p.MakePoint(p.XY(0, 0.5), p.RGB(0,1,0), p.UV(0,0)),
-			p.MakePoint(p.XY(0.5, 0), p.RGB(0,0,1), p.UV(0,0)),
+			p.MakePoint(p.XY(0, 0), p.RGBR, emptyBounds.Min),
+			p.MakePoint(p.XY(0, 0.5), p.RGBG, emptyBounds.Min),
+			p.MakePoint(p.XY(0.5, 0), p.RGBB, emptyBounds.Min),
 		),
 	)
 

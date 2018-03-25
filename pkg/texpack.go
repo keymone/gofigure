@@ -13,6 +13,8 @@ import (
 	"path/filepath"
 	"strings"
 
+	"gofigure/pkg/primitives"
+
 	"github.com/slimsag/binpack"
 )
 
@@ -34,6 +36,29 @@ func (tp *TexPack) PrintInfo() {
 	fmt.Printf("Sprites: %d\n", len(tp.Sprites()))
 	fmt.Printf("%+v\n", tp.Sprites())
 	fmt.Printf("Texture bounds: %v\n", tp.Data().Bounds())
+}
+
+func (tp *TexPack) Bounds() image.Rectangle {
+	return tp.data.Bounds()
+}
+
+func (tp *TexPack) SpriteBounds(name string) image.Rectangle {
+	return tp.sprites[name].Bounds()
+}
+
+func (tp *TexPack) SpriteBounds01(name string) primitives.Rectf {
+	tb := tp.Bounds()
+	sb := tp.SpriteBounds(name)
+	tw := float32(tb.Dx())
+	th := float32(tb.Dy())
+
+	smin := sb.Min
+	smax := sb.Max
+
+	return primitives.MakeRectf(
+		float32(smin.X)/tw,float32(smin.Y)/th,
+		float32(smax.X)/tw,float32(smax.Y)/th,
+	)
 }
 
 func (tp *TexPack) Sprites() map[string]TexSprite {
@@ -118,8 +143,6 @@ func LoadTexPack(file string) (*TexPack, error) {
 	if err != nil {
 		return nil, fmt.Errorf("parsing data size: %s", err)
 	}
-
-	fmt.Printf("texpack header: %+v\n", fh)
 
 	t := &TexPack{
 		sprites: map[string]TexSprite{},
