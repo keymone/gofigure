@@ -83,7 +83,7 @@ func (s *BaseScene) SetMvp(mvp mgl32.Mat4) {
 	gl.UniformMatrix4fv(mvpUniform, 1, false, &mvp[0])
 }
 
-func (s *BaseScene) SetTexture(file string) (uint32, error) {
+func (s *BaseScene) SetTextureFromPNG(file string) (uint32, error) {
 	imgFile, err := os.Open(file)
 	if err != nil {
 		return 0, fmt.Errorf("texture %q not found on disk: %v", file, err)
@@ -116,7 +116,32 @@ func (s *BaseScene) SetTexture(file string) (uint32, error) {
 		0,
 		gl.RGBA,
 		gl.UNSIGNED_BYTE,
-		gl.Ptr(rgba.Pix))
+		gl.Ptr(rgba.Pix),
+	)
+
+	return texture, nil
+}
+
+func (s *BaseScene) SetTextureFromTexPack(tp *TexPack) (uint32, error) {
+	var texture uint32
+	gl.GenTextures(1, &texture)
+	gl.ActiveTexture(gl.TEXTURE0)
+	gl.BindTexture(gl.TEXTURE_2D, texture)
+	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR)
+	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR)
+	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE)
+	gl.TexParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE)
+	gl.TexImage2D(
+		gl.TEXTURE_2D,
+		0,
+		gl.RGBA,
+		int32(tp.data.Rect.Size().X),
+		int32(tp.data.Rect.Size().Y),
+		0,
+		gl.RGBA,
+		gl.UNSIGNED_BYTE,
+		gl.Ptr(tp.data.Pix),
+	)
 
 	return texture, nil
 }

@@ -16,6 +16,8 @@ import (
 	"github.com/slimsag/binpack"
 )
 
+const TEXPACK_VERSION = uint8(0)
+
 // File layout: <version> <n sprites> <sprite data> <data size> <data>
 // Sprite data: <key size> <key data> <x1> <y1> <x2> <y2>
 
@@ -23,7 +25,7 @@ type TexSprite = image.Rectangle
 
 type TexPack struct {
 	sprites map[string]TexSprite
-	data *image.NRGBA
+	data *image.RGBA
 	index []string
 }
 
@@ -38,7 +40,7 @@ func (tp *TexPack) Sprites() map[string]TexSprite {
 	return tp.sprites
 }
 
-func (tp *TexPack) Data() *image.NRGBA {
+func (tp *TexPack) Data() *image.RGBA {
 	return tp.data
 }
 
@@ -103,6 +105,9 @@ func LoadTexPack(file string) (*TexPack, error) {
 	if err != nil {
 		return nil, fmt.Errorf("parsing version: %s", err)
 	}
+	if fh.version > TEXPACK_VERSION {
+		return nil, fmt.Errorf("can't handle version %d", fh.version)
+	}
 
 	err = binary.Read(buffer, binary.LittleEndian, &fh.spritesNum)
 	if err != nil {
@@ -166,7 +171,7 @@ func LoadTexPack(file string) (*TexPack, error) {
 		return nil, fmt.Errorf("decoding data: %s", err)
 	}
 
-	rgba := image.NewNRGBA(img.Bounds())
+	rgba := image.NewRGBA(img.Bounds())
 	if rgba.Stride != rgba.Rect.Size().X*4 {
 		return nil, fmt.Errorf("unsupported stride data: %s", err)
 	}
@@ -194,7 +199,7 @@ func SaveTexPack(tp *TexPack, path string) (int64, error) {
 	writer.Flush()
 
 	fileHeader := texFileHeader{
-		version: uint8(0),
+		version: uint8(TEXPACK_VERSION),
 		spritesNum: uint16(len(tp.sprites)),
 		dataSize: uint32(dataBytes.Len()),
 	}
@@ -289,7 +294,7 @@ func MakeTexPack(dir string) (*TexPack, error) {
 	if w <= 0 {
 		return nil, fmt.Errorf("texture packing broke: [%d %d]", w, h)
 	}
-	tp.data = image.NewNRGBA(image.Rect(0, 0, w, h))
+	tp.data = image.NewRGBA(image.Rect(0, 0, w, h))
 
 	for k := range tp.sprites {
 		draw.Draw(

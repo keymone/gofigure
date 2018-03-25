@@ -21,6 +21,7 @@ func XY(x, y float32) mgl32.Vec4         { return mgl32.Vec4{x, y, 0, 1} }
 func XYZ(x, y, z float32) mgl32.Vec4     { return mgl32.Vec4{x, y, z, 1} }
 func XYZW(x, y, z, w float32) mgl32.Vec4 { return mgl32.Vec4{x, y, z, w} }
 
+var RGBZ = mgl32.Vec4{0,0,0,0}
 func RGB(r, g, b float32) mgl32.Vec4     { return mgl32.Vec4{r, g, b, 1} }
 func RGBA(r, g, b, a float32) mgl32.Vec4 { return mgl32.Vec4{r, g, b, a} }
 
@@ -30,6 +31,10 @@ func MakePoint(pos, col mgl32.Vec4, uv mgl32.Vec2) *Point {
 	p := &Point{position: pos, color: col, uv: uv}
 	p.setupFlat()
 	return p
+}
+
+func MakePointXYUV(x, y, u, v float32) *Point {
+	return MakePoint(XY(x, y), RGBZ, UV(u, v))
 }
 
 func (p *Point) setupFlat() {

@@ -3,17 +3,19 @@ package main
 import (
 	"flag"
 	"fmt"
+	"image/png"
 	"os"
 
 	"gofigure/pkg"
 )
 
 func main() {
-	var in, out, info string
+	var in, out, info, ext string
 
 	flag.StringVar(&in, "in", "", "input directory")
 	flag.StringVar(&out, "out", "", "output file")
 	flag.StringVar(&info, "info", "", "describe file")
+	flag.StringVar(&ext, "ext", "", "extract -info pack into file")
 	flag.Parse()
 
 	if info != "" {
@@ -22,6 +24,19 @@ func main() {
 			panic(err.Error())
 		}
 		tp.PrintInfo()
+
+		if ext != "" {
+			fh, err := os.Create(ext)
+			defer fh.Close()
+			if err != nil {
+				panic(err.Error())
+			}
+			err = png.Encode(fh, tp.Data())
+			if err != nil {
+				panic(err.Error())
+			}
+		}
+
 		return
 	}
 
