@@ -5,20 +5,27 @@ import (
 
 	"gofigure/pkg"
 	p "gofigure/pkg/primitives"
-
-	"github.com/go-gl/mathgl/mgl32"
 )
 
 const (
 	width  = 800
 	height = 600
+	scale = float32(500)
 )
+
+type Ex01Scene struct {
+	pkg.BaseScene
+}
 
 func main() {
 	window := pkg.Init(width, height)
 	defer pkg.Terminate()
 
-	s := pkg.MakeBaseScene()
+	s := &Ex01Scene{}
+	s.Program = pkg.UseDefaultProgram()
+
+	ratio := float32(width) / height
+	s.SetMvpOrtho(ratio, scale)
 
 	tp, err := pkg.LoadTexPack("resources/assets.tp")
 	if err != nil {
@@ -36,21 +43,28 @@ func main() {
 	shipBR := shipBounds.Max
 	shipBR[1] = shipBounds.Min[1]
 
-	emptyBounds := tp.SpriteBounds01("empty")
+	//emptyBounds := tp.SpriteBounds01("empty")
 
-	s.AddEntity(
-		p.MakeQuadRCR(
-			p.MakeRectf(-.5,-.5, -.1, .5), p.RGBW, shipBounds,
-		),
-		p.MakeTriangle(
-			p.MakePoint(p.XY(0, 0), p.RGBR, emptyBounds.Min),
-			p.MakePoint(p.XY(0, 0.5), p.RGBG, emptyBounds.Min),
-			p.MakePoint(p.XY(0.5, 0), p.RGBB, emptyBounds.Min),
-		),
+	q := p.MakeQuadRCR(
+		p.MakeRectf(0,0, 130, 344), p.RGBW, shipBounds,
 	)
 
-	ratio := float32(width) / height
-	s.SetMvp(mgl32.Ortho(-ratio, ratio, -1, 1, 1, -1))
+	s.AddEntity(
+		q,
+		//p.MakeTriangle(
+		//	p.MakePoint(p.XY(0, 0), p.RGBR, emptyBounds.Min),
+		//	p.MakePoint(p.XY(0, 0.5), p.RGBG, emptyBounds.Min),
+		//	p.MakePoint(p.XY(0.5, 0), p.RGBB, emptyBounds.Min),
+		//),
+	)
 
 	pkg.MainLoop(window, s.Update, s.Render)
+}
+
+func (s *Ex01Scene) Update(timeDelta float64) {
+	for _, e := range s.Entities {
+		e.Translate(-130/2, -344/2, 0)
+		e.RotateZ(float32(timeDelta))
+		e.Translate(130/2, 344/2, 0)
+	}
 }
