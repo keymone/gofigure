@@ -9,26 +9,19 @@ const (
 )
 
 type Quad struct {
+	DrawPrimitive
+
+	Anchor Vec3
+
 	tl *Triangle
 	br *Triangle
-
-	DrawPrimitive
 }
 
-func MakeQuadPPPP(tl, tr, br, bl *Point) *Quad {
-	tlt := MakeTriangle(bl, tl, tr)
-	brt := MakeTriangle(tr, br, bl)
-	q := &Quad{tl: tlt, br: brt}
-	q.syncFlat()
-	q.dirty = true
-	return q
-}
-
-func MakeQuadRCR(pr Rectf, color mgl32.Vec4, tr Rectf) *Quad {
-	pbl := MakePoint(mgl32.Vec4{pr.Min[0], pr.Min[1], 0, 1}, color, mgl32.Vec2{tr.Min[0], tr.Max[1]})
-	ptl := MakePoint(mgl32.Vec4{pr.Min[0], pr.Max[1], 0, 1}, color, tr.Min)
-	ptr := MakePoint(mgl32.Vec4{pr.Max[0], pr.Max[1], 0, 1}, color, mgl32.Vec2{tr.Max[0], tr.Min[1]})
-	pbr := MakePoint(mgl32.Vec4{pr.Max[0], pr.Min[1], 0, 1}, color, tr.Max)
+func MakeQuad(pr Rectf, color mgl32.Vec4, tr Rectf) *Quad {
+	pbl := MakePoint(XY(pr.Min[0], pr.Min[1]), color, Vec2{tr.Min[0], tr.Max[1]})
+	ptl := MakePoint(XY(pr.Min[0], pr.Max[1]), color, tr.Min)
+	ptr := MakePoint(XY(pr.Max[0], pr.Max[1]), color, Vec2{tr.Max[0], tr.Min[1]})
+	pbr := MakePoint(XY(pr.Max[0], pr.Min[1]), color, tr.Max)
 
 	tlt := MakeTriangle(pbl, ptl, ptr)
 
@@ -37,9 +30,12 @@ func MakeQuadRCR(pr Rectf, color mgl32.Vec4, tr Rectf) *Quad {
 		&Point{Vertex: ptr.Vertex, DrawPrimitive: ptr.DrawPrimitive},
 		pbr,
 		&Point{Vertex: pbl.Vertex, DrawPrimitive: pbl.DrawPrimitive})
+
 	q := &Quad{tl: tlt, br: brt}
+	q.Anchor = pbl.position.Vec3()
 	q.syncFlat()
 	q.dirty = true
+
 	return q
 }
 
@@ -56,9 +52,9 @@ func (q *Quad) RotateZ(angle float32) {
 	q.Setup()
 }
 
-func (q *Quad) Translate(x, y, z float32) {
-	q.br.Translate(x, y, z)
-	q.tl.Translate(x, y, z)
+func (q *Quad) Translate(delta Vec3) {
+	q.br.Translate(delta)
+	q.tl.Translate(delta)
 	q.dirty = true
 	q.Setup()
 }
@@ -74,4 +70,16 @@ func (q *Quad) Setup() {
 func (q *Quad) Draw(mode int, first int) {
 	q.Setup()
 	q.DrawPrimitive.Draw(mode, first)
+}
+
+func (q *Quad) MoveTo(newPos Vec3) {
+	delta := q.Anchor.Sub(newPos)
+  q.Anchor = newPos
+	q.Translate(delta)
+}
+
+func (q *Quad) RotateBy(angle float32) {
+	q.Translate(Vec3{}.Sub(q.Anchor))
+	q.RotateZ(angle)
+	q.Translate(q.Anchor)
 }

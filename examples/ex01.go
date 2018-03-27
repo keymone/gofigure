@@ -38,33 +38,24 @@ func main() {
 	}
 
 	shipBounds := tp.SpriteBounds01("ship/hull")
-	shipTL := shipBounds.Min
-	shipTL[1] = shipBounds.Max[1]
-	shipBR := shipBounds.Max
-	shipBR[1] = shipBounds.Min[1]
-
-	//emptyBounds := tp.SpriteBounds01("empty")
-
-	q := p.MakeQuadRCR(
+	q := p.MakeQuad(
 		p.MakeRectf(0,0, 130, 344), p.RGBW, shipBounds,
 	)
+	s.AddEntity(q)
 
-	s.AddEntity(
-		q,
-		//p.MakeTriangle(
-		//	p.MakePoint(p.XY(0, 0), p.RGBR, emptyBounds.Min),
-		//	p.MakePoint(p.XY(0, 0.5), p.RGBG, emptyBounds.Min),
-		//	p.MakePoint(p.XY(0.5, 0), p.RGBB, emptyBounds.Min),
-		//),
+	emptyBounds := tp.SpriteBounds01("empty")
+	t := p.MakeTriangle(
+		p.MakePoint(p.XY(-100, -100), p.RGBR, emptyBounds.Min),
+		p.MakePoint(p.XY(-100, -50), p.RGBG, emptyBounds.Min),
+		p.MakePoint(p.XY(50, -100), p.RGBB, emptyBounds.Min),
 	)
+	s.AddEntity(t)
 
 	pkg.MainLoop(window, s.Update, s.Render)
 }
 
 func (s *Ex01Scene) Update(timeDelta float64) {
 	for _, e := range s.Entities {
-		e.Translate(-130/2, -344/2, 0)
-		e.RotateZ(float32(timeDelta))
-		e.Translate(130/2, 344/2, 0)
+		e.RotateBy(float32(timeDelta))
 	}
 }

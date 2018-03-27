@@ -20,33 +20,14 @@ func XY(x, y float32) Vec4         { return Vec4{x, y, 0, 1} }
 func XYZ(x, y, z float32) Vec4     { return Vec4{x, y, z, 1} }
 func RGB(r, g, b float32) Vec4     { return Vec4{r, g, b, 1} }
 func RGBA(r, g, b, a float32) Vec4 { return Vec4{r, g, b, a} }
-func UV(u, v float32) mgl32.Vec2 { return mgl32.Vec2{u, v} }
+func UV(u, v float32) Vec2         { return Vec2{u, v} }
 
 var (
-	RGBZ = Vec4{0,0,0,0}
 	RGBW = Vec4{1,1,1,1}
 	RGBR = Vec4{1,0,0,1}
 	RGBG = Vec4{0,1,0,1}
 	RGBB = Vec4{0,0,1,1}
-	UVZ = mgl32.Vec2{0,0}
 )
-
-type Rectf struct {
-	Min, Max [2]float32
-}
-
-func MakeRectf(x1, y1, x2, y2 float32) Rectf {
-	if x1 > x2 {
-		x1, x2 = x2, x1
-	}
-	if y1 > y2 {
-		y1, y2 = y2, y1
-	}
-	return Rectf{
-		Min: [2]float32{x1, y1},
-		Max: [2]float32{x2, y2},
-	}
-}
 
 func MakePoint(pos, col Vec4, uv mgl32.Vec2) *Point {
 	p := &Point{}
@@ -56,10 +37,6 @@ func MakePoint(pos, col Vec4, uv mgl32.Vec2) *Point {
 	p.dirty = true
 	p.syncFlat()
 	return p
-}
-
-func MakePointXYUV(x, y, u, v float32) *Point {
-	return MakePoint(XY(x, y), RGBZ, UV(u, v))
 }
 
 func (p *Point) syncFlat() {
@@ -76,10 +53,10 @@ func (p *Point) RotateZ(angle float32) {
 	p.Setup()
 }
 
-func (p *Point) Translate(x, y, z float32) {
-	p.position[0] += x
-	p.position[1] += y
-	p.position[2] += z
+func (p *Point) Translate(delta Vec3) {
+	p.position[0] += delta.X()
+	p.position[1] += delta.Y()
+	p.position[2] += delta.Z()
 	p.dirty = true
 	p.Setup()
 }

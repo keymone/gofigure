@@ -6,15 +6,20 @@ import (
 
 type Drawer interface {
 	Draw(int, int)
+
 	RotateZ(float32)
-	Translate(float32, float32, float32)
+	Translate(Vec3)
+
+	RotateBy(float32)
+	MoveTo(Vec3)
 }
 
 type DrawPrimitive struct {
-	flat []float32
-	vbo  uint32
-	vao  uint32
-	dirty bool
+	anchor Vec3
+	flat   []float32
+	vbo    uint32
+	vao    uint32
+	dirty  bool
 }
 
 func (dp *DrawPrimitive) syncVbo() {
@@ -49,11 +54,8 @@ func (dp *DrawPrimitive) Vertices() int {
 	return len(dp.flat) / POINT_FLAT_SIZE
 }
 
-func (dp *DrawPrimitive) syncFlat() {}
-
 func (dp *DrawPrimitive) Setup() {
-	if dp.dirty || dp.flat == nil {
-		dp.syncFlat()
+	if dp.dirty {
 		dp.syncVbo()
 		dp.syncVao()
 		dp.dirty = false
